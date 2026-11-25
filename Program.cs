@@ -3,9 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using TovarniDispecink.Models;
 using TovarniDispecink.Data;
+using System.Text.Json.Serialization;
 
 // 1. Založení webového serveru
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 // 2. Dependency Injection (DI) - Naučíme server, že existuje naše databáze
 builder.Services.AddDbContext<TovarniDispecinkContext>();
@@ -91,6 +96,10 @@ app.MapGet("/api/vyroba/{oznaceni}", async (string oznaceni, TovarniDispecinkCon
     {
         hledanaLinka.KritickaChyba = true;
         await db.SaveChangesAsync();
+
+        string zprava = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | [EMERGENCY STOP] Linka {oznaceni} odstavena (Teplota: {hledanaLinka.TeplotaCelsia}°C)\n";
+        await File.AppendAllTextAsync("havarijni_log.txt", zprava);
+
         return Results.Ok($"[EMERGENCY STOP]: Linka {oznaceni} odstavena! Nebezpečí požáru.");
     }
     else
