@@ -18,12 +18,12 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// 3. API ENDPOINTY (Cesty, na které se budou uživatelé připojovat)
+// 3. API ENDPOINTY
 
 // Když někdo do prohlížeče zadá adresu /api/linky, spustí se tento kód:
 app.MapGet("/api/linky", async (TovarniDispecinkContext db) => 
 {
-    // Získáme všechny linky z databáze a server je automaticky převede na JSON!
+    // Získáme všechny linky z databáze a server je automaticky převede na JSON
     var vsechnyLinky = await db.Linky.ToListAsync();
     return Results.Ok(vsechnyLinky);
 });
@@ -77,10 +77,10 @@ app.MapGet("/api/oprav/{oznaceniLinky}/{jmenoUdrzbare}", async (string oznaceniL
 
     try
     {
-        // Voláme tvou metodu z modelu!
+        // Voláme metodu z modelu!
         linka.ProvedUdrzbu(udrzbar);
         
-        // Zápis do tvé historie
+        // Zápis do historie
         db.HistorieUdrzby.Add(new ZaznamUdrzby(linka.Id, udrzbar.Id, "Běžná oprava na vyžádání z tabletu"));
         
         await db.SaveChangesAsync();

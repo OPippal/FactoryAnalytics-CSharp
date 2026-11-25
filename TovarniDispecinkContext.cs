@@ -3,11 +3,9 @@ namespace TovarniDispecink.Data;
 using TovarniDispecink.Models;
 public class TovarniDispecinkContext : DbContext
 {
-    // DbSet reprezentuje jednu tabulku v SQL databázi. 
-    // Říkáme tím: "Vytvoř v databázi tabulku a ukládej do ní objekty VyrobniLinka."
+    // DbSet reprezentuje jednu tabulku v SQL databázi
     public DbSet<VyrobniLinka> Linky { get; set; }
     
-    // Zde můžeme přidat i zaměstnance
     public DbSet<Zamestnanec> Zamestnanci { get; set; }
 
     public DbSet<ZaznamUdrzby> HistorieUdrzby { get; set; }

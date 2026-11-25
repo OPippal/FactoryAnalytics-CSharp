@@ -5,8 +5,8 @@ public class ZaznamUdrzby
     public DateTime CasOpravy { get; set; }
     public string PopisZavady { get; set; }
 
-    // Těmto číslům se říká "Foreign Key". 
-    // Databáze díky nim ví, ke které lince a komu záznam patří.
+    // Foreign Key
+    // Databáze díky nim ví, ke které lince a komu záznam patří
     public int VyrobniLinkaId { get; set; }
     public int ZamestnanecId { get; set; }
 
