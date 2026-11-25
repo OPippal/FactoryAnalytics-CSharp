@@ -15,6 +15,41 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<TovarniDispecinkContext>();
+    db.Database.EnsureCreated();
+
+    if (!db.Linky.Any())
+    {
+        db.Linky.AddRange(
+            new VyrobniLinka("L-01", 1200, 65.5, false),
+            new VyrobniLinka("L-02", 850, 108.0, false),
+            new VyrobniLinka("L-03", 400, 115.0, true)
+        );
+    }
+
+    if (!db.Zamestnanci.Any())
+    {
+        db.Zamestnanci.AddRange(
+            new Zamestnanec("Karel", RolePracovnika.Udrzbar),
+            new Zamestnanec("Petr", RolePracovnika.Technik),
+            new Zamestnanec("Jana", RolePracovnika.Manazer)
+        );
+    }
+
+    db.SaveChanges();
+
+    if (!db.HistorieUdrzby.Any())
+    {
+        var prvniLinka = db.Linky.First();
+        var udrzbar = db.Zamestnanci.First(z => z.Role == RolePracovnika.Udrzbar);
+
+        db.HistorieUdrzby.Add(new ZaznamUdrzby(prvniLinka.Id, udrzbar.Id, "Vstupní revize linky"));
+        db.SaveChanges();
+    }
+}
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
